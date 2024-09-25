@@ -1,5 +1,9 @@
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.JsonNode;
+//import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -17,19 +21,19 @@ public class GitHubActivity {
     }
 
     public void displayEvents() {
-        JsonNode events = getEvents();
+        JsonArray events = getEvents();
         if (events == null) return;
         printEvents(events);
     }
 
-    private JsonNode getEvents() {
+    private JsonArray getEvents() {
         try {
             HttpResponse<String> response = fetchEvents();
             if (response.statusCode() == 404) {
                 System.out.println("\u001B[31m" + "User not found!\u001B[0m");
             }
             if (response.statusCode() == 200) {
-                return parseJson(response.body());
+                return JsonParser.parseString(response.body()).getAsJsonArray();
             } else {
                 System.out.println("\u001B[31m" + "An error occurred!\u001B[0m");
             }
@@ -57,26 +61,26 @@ public class GitHubActivity {
         return GITHUB_API_URL+"/users/%s/events".formatted(userName);
     }
 
-    private JsonNode parseJson(String json) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readTree(json);
-    }
+//    private JsonNode parseJson(String json) throws IOException {
+//        ObjectMapper objectMapper = new ObjectMapper();
+//        return objectMapper.readTree(json);
+//    }
 
-    private void printEvents(JsonNode events) {
+    private void printEvents(JsonArray events) {
 
         if (events.isEmpty()) {
             System.out.println("No recent activity found!");
             return;
         }
 
-        for (JsonNode event : events) {
-            String action = createAction(event);
+        for (JsonElement event : events) {
+            String action = createAction(event.getAsJsonObject());
             System.out.println(action);
         }
     }
 
-    private String createAction(JsonNode event) {
-        String type = event.get("type").asText();
+    private String createAction(JsonObject event) {
+        String type = event.get("type").getAsString();
         return switch (type) {
             case "PushEvent" -> createPushEventMessage(event);
             case "IssuesEvent" -> createIssuesEventMessage(event);
@@ -87,31 +91,32 @@ public class GitHubActivity {
         };
     }
 
-    private String createPushEventMessage(JsonNode event) {
-        int commitCount = event.get("payload").get("size").asInt();
-        return "Pushed " + commitCount + " commit(s) to " + event.get("repo").get("name");
+    private String createPushEventMessage(JsonObject event) {
+        int commitCount = event.get("payload").getAsJsonObject().get("size").getAsInt();
+        return "Pushed " + commitCount + " commit(s) to " + event.get("repo").getAsJsonObject().get("name");
     }
 
-    private String createIssuesEventMessage(JsonNode event) {
-        return event.get("payload").get("action").asText().toUpperCase().charAt(0)
-                + event.get("payload").get("action").asText() + " an issue in ${event.repo.name}";
+    private String createIssuesEventMessage(JsonObject event) {
+        return event.get("payload").getAsJsonObject().get("action").getAsString().toUpperCase().charAt(0)
+                + event.get("payload").getAsJsonObject().get("action").getAsString()
+                + " an issue in ${event.repo.name}";
     }
 
-    private String createWatchEventMessage(JsonNode event) {
-        return "Starred " + event.get("repo").get("name").asText();
+    private String createWatchEventMessage(JsonObject event) {
+        return "Starred " + event.get("repo").getAsJsonObject().get("name").getAsString();
     }
 
-    private String createForkEventMessage(JsonNode event) {
-        return "Forked " + event.get("repo").get("name").asText();
+    private String createForkEventMessage(JsonObject event) {
+        return "Forked " + event.get("repo").getAsJsonObject().get("name").getAsString();
     }
 
-    private String createCreateEventMessage(JsonNode event) {
-        return "Created " + event.get("payload").get("ref_type").asText()
-                + " in " + event.get("repo").get("name").asText();
+    private String createCreateEventMessage(JsonObject event) {
+        return "Created " + event.get("payload").getAsJsonObject().get("ref_type").getAsString()
+                + " in " + event.get("repo").getAsJsonObject().get("name").getAsString();
     }
 
-    private String createUnknownEventMessage(JsonNode event) {
-        return event.get("type").asText().replace("Event", "")
-                + " in " + event.get("repo").get("name").asText();
+    private String createUnknownEventMessage(JsonObject event) {
+        return event.get("type").getAsString().replace("Event", "")
+                + " in " + event.get("repo").getAsJsonObject().get("name").getAsString();
     }
 }
