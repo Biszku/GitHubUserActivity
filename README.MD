@@ -16,8 +16,7 @@ cd taskTracker
 ```bash
 javac -d out -cp .\libs\gson-2.10.1.jar .\src\*.java
 ```
-3. Run app with IDE or with command line (if you know how to do it)
+3. Run the project
 ```bash
-your command to run the app
+java -cp "out;libs\gson-2.10.1.jar" Main [github_username]
 ```
-4. Set argument in your IDE then build and run the app 
