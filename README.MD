@@ -2,8 +2,7 @@
 
 ## Overview
 Application that analyzes the activity of a GitHub user.
-The application will display last 30 events of a user,
-and will display the number of events of each type.
+The application will display last 30 events of a user.
 
 ## Installation
 

@@ -1,5 +1,3 @@
-//import com.fasterxml.jackson.databind.JsonNode;
-//import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -60,11 +58,6 @@ public class GitHubActivity {
     private String createUrl() {
         return GITHUB_API_URL+"/users/%s/events".formatted(userName);
     }
-
-//    private JsonNode parseJson(String json) throws IOException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        return objectMapper.readTree(json);
-//    }
 
     private void printEvents(JsonArray events) {
 
