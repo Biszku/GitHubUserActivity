@@ -18,7 +18,7 @@ public class GitHubActivity {
         this.userName = userName;
     }
 
-    public void displayEvents() {
+    public void printEvents() {
         JsonArray events = getEvents();
         if (events == null) return;
         printEvents(events);

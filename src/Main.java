@@ -4,7 +4,7 @@ public class Main {
 
         String userName = getUserName(args);
         GitHubActivity gitHubActivity = new GitHubActivity(userName);
-        gitHubActivity.displayEvents();
+        gitHubActivity.printEvents();
     }
 
     private static String getUserName(String[] args) {
@@ -13,7 +13,6 @@ public class Main {
             System.out.println("Usage: java Main <GitHub username>");
             System.exit(1);
         }
-
         return args[0];
     }
 }
