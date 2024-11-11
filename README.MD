@@ -9,7 +9,7 @@ The application will display last 30 events of a user.
 1. Clone the repository
 ```bash
 git clone https://github.com/Biszku/GitHubUserActivity.git
-cd taskTracker/src
+cd GitHubUserActivity/src
 ```
 2. Compile the project
 ```bash
