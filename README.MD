@@ -17,5 +17,5 @@ javac -d out -cp .\libs\gson-2.10.1.jar .\src\*.java
 ```
 3. Run the project
 ```bash
-java -cp "out;libs\gson-2.10.1.jar" GitHubActivity [github_username]
+java -cp "out;libs\gson-2.10.1.jar" GitHubActivity <github_username>
 ```
